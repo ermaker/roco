@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'roodi'
 require 'roodi_task'
 
