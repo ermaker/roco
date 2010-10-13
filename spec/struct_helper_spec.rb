@@ -1,3 +1,4 @@
+require 'rspec'
 require 'struct_helper'
 
 describe StructHelper do
