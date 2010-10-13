@@ -13,3 +13,8 @@ struct simple_struct_int_array
 {
   int simple_int_array[3];
 };
+
+struct simple_struct_char_array
+{
+  char simple_char_array[0];
+};

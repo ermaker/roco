@@ -104,4 +104,42 @@ module StructHelper
     end
   end
 
+  # Get type of member of struct
+  def typeof struct, member
+
+    member_for_function_name = member.dup
+    member_for_function_name.gsub!('[', '__square_bracket_begins__')
+    member_for_function_name.gsub!(']', '__square_bracket_ends__')
+
+    begin
+      method(:"typeof_#{struct}_#{member_for_function_name}")[]
+    rescue NameError
+      inline do |builder|
+        builder.add_link_flags '-lstdc++'
+        builder.add_compile_flags '-xc++'
+        include_dirs.each do |include_dir|
+          builder.add_compile_flags "-I#{include_dir}"
+        end
+        headers.each do |header|
+          builder.include %{"#{header}"}
+        end
+        builder.include '<typeinfo>'
+        builder.include '<cxxabi.h>'
+        builder.c <<-EOC
+          VALUE typeof_#{struct}_#{member_for_function_name}()
+          {
+            char* p = abi::__cxa_demangle(typeid(((#{struct}*)0)->#{member}).name(), 0, 0, 0);
+            if(!p)
+              return Qnil;
+            VALUE retval = rb_str_new2(p);
+            free(p);
+            return retval;
+          }
+        EOC
+      end
+      module_function :"typeof_#{struct}_#{member_for_function_name}"
+      retry
+    end
+  end
+
 end

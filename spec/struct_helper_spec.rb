@@ -25,4 +25,16 @@ describe StructHelper do
   it 'should get countof member of struct' do
     StructHelper.countof('simple_struct_int_array', 'simple_int_array').should == 3
   end
+
+  it 'should get typeof memeber of struct' do
+    StructHelper.typeof('simple_struct_int', 'simple_int').should == 'int'
+    StructHelper.typeof('simple_struct_int2', 'simple_int1').should == 'int'
+    StructHelper.typeof('simple_struct_int2', 'simple_int2').should == 'int'
+    StructHelper.typeof('simple_struct_int_array', 'simple_int_array').should == 'int [3]'
+    StructHelper.typeof('simple_struct_int_array', 'simple_int_array[0]').should == 'int'
+    StructHelper.typeof('simple_struct_int_array', 'simple_int_array[1]').should == 'int'
+    StructHelper.typeof('simple_struct_int_array', 'simple_int_array[2]').should == 'int'
+    StructHelper.typeof('simple_struct_char_array', 'simple_char_array').should == 'char [0]'
+    StructHelper.typeof('simple_struct_char_array', 'simple_char_array[0]').should == 'char'
+  end
 end
