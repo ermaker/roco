@@ -174,3 +174,10 @@ module StructHelper
     result 
   end
 end
+
+if __FILE__ == $0
+  require 'yaml'
+  StructHelper.include_dirs = %w[../loco]
+  StructHelper.headers = %w[bbs.h]
+  open('structures.yml','w') {|f| f << StructHelper.info.to_yaml}
+end
