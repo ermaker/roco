@@ -143,7 +143,7 @@ module StructHelper
   end
 
   def all_possible_filenames
-    include_dirs.product(headers).map do |dir,file|
+    (include_dirs||[]).product(headers||[]).map do |dir,file|
       File.join(dir,file)
     end
   end
