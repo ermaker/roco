@@ -6,5 +6,5 @@ Rake::RDocTask.new(:rdoc => 'rdoc',
   #rd.rdoc_dir = 'public_html/rdoc'
   rd.main = 'README'
   rd.rdoc_files.include('README', 'lib')
-  rd.options << '-c UTF-8'
+  #rd.options << '-c UTF-8'
 end
