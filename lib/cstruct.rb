@@ -4,6 +4,11 @@ require 'struct_reader'
 module CStruct
   include Enumerable
 
+  def initialize filename
+    @filename = filename
+  end
+  attr_reader :filename
+
   def structname
     self.class.name.downcase
   end
@@ -58,8 +63,4 @@ end
 
 class Userec
   include CStruct
-  def initialize filename
-    @filename = filename
-  end
-  attr_reader :filename
 end
