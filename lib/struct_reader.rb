@@ -23,7 +23,7 @@ class StructReader
 
     def make_struct name, data
       result = {}
-      @@structures[name].each do |item|
+      @@structures[name][1..-1].each do |item|
         item[1] =~ /^(.*?)(?: \[(\d+)\])?$/
         # FIXME: bug with char [] if it is not a string.
         pack_string = if $1 == 'char' && $2

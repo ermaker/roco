@@ -163,7 +163,7 @@ module StructHelper
     all_members = all_items.select {|item| item.include?('kind:m')}
 
     result = Hash[all_structs.map do |struct|
-      [struct[0],[]]
+      [struct[0],[sizeof(struct[0])]]
     end]
 
     all_members.each do |member|
