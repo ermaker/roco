@@ -2,5 +2,5 @@ require 'rubygems'
 require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new do |t|
-  t.rspec_opts = '--color --diff --format specdoc'
+  t.rspec_opts = '--color -f d'
 end
