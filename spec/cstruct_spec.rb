@@ -1,6 +1,10 @@
 require 'rspec'
 require 'cstruct'
 
+class Userec
+  include CStruct
+end
+
 describe CStruct do
   before do
     StructReader.load('structures.yml')

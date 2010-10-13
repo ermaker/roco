@@ -60,7 +60,3 @@ module CStruct
     end
   end
 end
-
-class Userec
-  include CStruct
-end
