@@ -168,7 +168,7 @@ module StructHelper
 
     all_members.each do |member|
       if member.any?{|item| item =~ /^struct:(.*)$/}
-        result[$1] << [typeof($1,member[0]), member[0]]
+        result[$1] << [offsetof($1,member[0]), typeof($1,member[0]), member[0]]
       end
     end
     result 
