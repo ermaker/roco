@@ -38,7 +38,7 @@ describe StructHelper do
     StructHelper.typeof('simple_struct_char_array', 'simple_char_array[0]').should == 'char'
   end
 
-  it 'should get all struct infomation' do
+  it 'should get all struct information' do
     StructHelper.info.sort.should == [
       ["simple_struct_char_array", [["char [0]", "simple_char_array"]]],
       ["simple_struct_int", [["int", "simple_int"]]],
