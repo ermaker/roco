@@ -6,6 +6,10 @@ class StructReader
     def load filename
       @@structures = YAML::load(File.read(filename))
     end
+    def structures
+      @@structures
+    end
+
     alias orig_method_missing method_missing
     def method_missing(sym, *args, &block)
       orig_method_missing sym, *args, &block unless @@structures[sym.to_s]

@@ -17,7 +17,7 @@ describe StructReader do
       ["lasthost", ""],
       ["lastlogin", nil],
       ["notused", ""],
-      ["numlogins", 0],
+      ["numlogins", 1],
       ["numposts", 0],
       ["passwd", "Ttk.wSs2SGDfQ"],
       ["protocol", 0],
