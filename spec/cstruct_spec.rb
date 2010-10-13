@@ -66,4 +66,22 @@ describe CStruct do
   it 'should change to array' do
     @userec.to_a.should == @users
   end
+
+  it 'should access [] with index' do
+    (-10..10).each do |idx|
+      @userec[idx].should == @userec.to_a[idx]
+    end
+  end
+
+  it 'should access [] with range' do
+    pending
+    (-10..10).to_a.product((-10..10).to_a).map do |f,l|
+      [(f..l),(f...l)]
+    end.flatten.each do |range|
+      p range
+      @userec[range].should == @userec.to_a[range]
+    end
+  end
+
+  it 'should access [] with start and length'
 end
