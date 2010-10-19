@@ -7,7 +7,7 @@ end
 
 describe CStruct do
   before do
-    StructReader.load('structures.yml')
+    StructReader.load(File.dirname(__FILE__) + '/fixtures/structures.yml')
     @userec = Userec.new(File.dirname(__FILE__) + '/fixtures/.PASSWDS')
     @users = [
       {"realname"=>"real sysop",

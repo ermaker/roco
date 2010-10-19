@@ -3,7 +3,7 @@ require 'struct_reader'
 
 describe StructReader do
   before do
-    StructReader.load('structures.yml')
+    StructReader.load(File.dirname(__FILE__) + '/fixtures/structures.yml')
   end
 
   it 'should read userec' do
