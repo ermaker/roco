@@ -15,7 +15,7 @@ describe StructReader do
       ["email", "sysop@loco"],
       ["flags", ""],
       ["lasthost", ""],
-      ["lastlogin", nil],
+      ["lastlogin", 1286981333],
       ["notused", ""],
       ["numlogins", 1],
       ["numposts", 0],

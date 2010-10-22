@@ -23,6 +23,7 @@ class StructReader
       'unsigned int' => 'I',
       'unsigned' => 'I',
       'time_t' => 'L_',
+      'long' => 'l_',
     }
 
     def make_struct name, data
@@ -33,11 +34,14 @@ class StructReader
         pack_string = if $1 == 'char' && $2
           "@#{item[0]}Z#$2"
         else
-
           "@#{item[0]}#{TYPE_TO_PACKCHAR[$1]}#$2"
         end
-        value = data.unpack(pack_string)[0]
-        result[item[2]] = value
+        value = data.unpack(pack_string)
+        if value.one?
+          result[item[2]] = value[0]
+        else
+          result[item[2]] = value
+        end
       end
       result
     end

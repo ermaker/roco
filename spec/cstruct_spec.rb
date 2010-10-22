@@ -22,12 +22,12 @@ describe CStruct do
         "userid"=>"SYSOP",
         "sex"=>"\263\262",
         "numposts"=>0,
-        "lastlogin"=>nil,
+        "lastlogin"=>1286981333,
         "notused"=>"",
         "passwd"=>"Ttk.wSs2SGDfQ",
         "email"=>"sysop@loco",
         "editor_kind"=>0,
-      },
+      }.sort,
       {"realname"=>"real1",
         "flags"=>"",
         "address"=>"",
@@ -40,12 +40,12 @@ describe CStruct do
         "userid"=>"user1",
         "sex"=>"\277\251",
         "numposts"=>0,
-        "lastlogin"=>nil,
+        "lastlogin"=>1286984680,
         "notused"=>"",
         "passwd"=>"pz2WjJfrXbKao",
         "email"=>"user1",
         "editor_kind"=>0,
-      },
+      }.sort,
       {"realname"=>"real2",
         "flags"=>"",
         "address"=>"",
@@ -58,17 +58,17 @@ describe CStruct do
         "userid"=>"user2",
         "sex"=>"\263\262",
         "numposts"=>0,
-        "lastlogin"=>nil,
+        "lastlogin"=>1286984708,
         "notused"=>"",
         "passwd"=>"E.pPaINDsryEw",
         "email"=>"email2",
         "editor_kind"=>0,
-      },
+      }.sort,
     ]
   end
 
   it 'should change to array' do
-    @userec.to_a.should == @users
+    @userec.to_a.map{|v|v.sort}.should == @users
   end
 
   it 'should access [] with index' do
