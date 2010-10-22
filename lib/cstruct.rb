@@ -22,7 +22,7 @@ module CStruct
   end
   alias size length
 
-  def read_range range, &blk
+  def read range, &blk
     first = correct_index range.first
     last = correct_index range.last
 
@@ -42,10 +42,10 @@ module CStruct
       end
     end
   end
-  private :read_range
+  private :read
 
   def each
-    read_range((0..-1)) do |range,&blk|
+    read((0..-1)) do |range,&blk|
       range.each {yield blk[]}
     end
   end
@@ -60,7 +60,7 @@ module CStruct
 
   def [] idx_or_range
     if idx_or_range.class == Range
-      read_range(idx_or_range) do |range,&blk|
+      read(idx_or_range) do |range,&blk|
         range.map {blk[]}
       end
     else
