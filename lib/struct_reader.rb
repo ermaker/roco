@@ -10,12 +10,6 @@ class StructReader
       @@structures
     end
 
-    alias orig_method_missing method_missing
-    def method_missing(sym, *args, &block)
-      orig_method_missing sym, *args, &block unless @@structures[sym.to_s]
-      make_struct sym.to_s, args[0]
-    end
-
     TYPE_TO_PACKCHAR = {
       'char' => 'c',
       'unsigned char' => 'C',
