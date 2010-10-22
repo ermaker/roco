@@ -36,6 +36,7 @@ module CStruct
     new_range = range.exclude_end? ? first...last : first..last
 
     open(filename) do |f|
+      f.flock(File::LOCK_SH)
       f.seek(new_range.first*sizeof_struct, IO::SEEK_SET)
       blk.call(new_range) do
         StructReader.make_struct(structname, f.read(sizeof_struct))
