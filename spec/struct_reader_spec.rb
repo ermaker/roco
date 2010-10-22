@@ -8,7 +8,7 @@ describe StructReader do
 
   it 'should read userec' do
     data = File.read(File.dirname(__FILE__) + '/fixtures/.PASSWDS')
-    userec = StructReader.userec(data)
+    userec = StructReader.make_struct('userec',data)
     userec.sort.should == [
       ["address", ""],
       ["editor_kind", 0],
