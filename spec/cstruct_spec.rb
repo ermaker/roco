@@ -78,11 +78,19 @@ describe CStruct do
   end
 
   it 'should access [] with range' do
+    (-2..2).to_a.product((-2..2).to_a).map do |f,l|
+      [(f..l),(f...l)]
+    end.flatten.each do |range|
+      @userec[range].should == @userec.to_a[range]
+    end
+  end
+
+  it 'should access [] with extreme range' do
     pending
     (-10..10).to_a.product((-10..10).to_a).map do |f,l|
       [(f..l),(f...l)]
     end.flatten.each do |range|
-      p range
+      #p range
       @userec[range].should == @userec.to_a[range]
     end
   end
