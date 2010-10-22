@@ -26,7 +26,12 @@ module CStruct
     first = correct_index range.first
     last = correct_index range.last
 
-    return nil unless 0 <= first and first < length
+    return nil unless 0 <= first and first <= length
+    if range.exclude_end?
+      last = length if last > length
+    else
+      last = length-1 if last >= length
+    end
 
     new_range = range.exclude_end? ? first...last : first..last
 

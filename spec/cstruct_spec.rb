@@ -86,11 +86,9 @@ describe CStruct do
   end
 
   it 'should access [] with extreme range' do
-    pending
     (-10..10).to_a.product((-10..10).to_a).map do |f,l|
       [(f..l),(f...l)]
     end.flatten.each do |range|
-      #p range
       @userec[range].should == @userec.to_a[range]
     end
   end
