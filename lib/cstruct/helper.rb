@@ -2,14 +2,13 @@ require 'rubygems'
 require 'inline'
 
 module CStruct
+  class << self
+    attr_accessor :include_dirs
+    attr_accessor :headers
+  end
+    
   # Helper to get informations of struct
   module Helper
-
-    class << self
-      attr_accessor :include_dirs
-      attr_accessor :headers
-    end
-    
     module_function
 
     # Get size of struct
@@ -21,10 +20,10 @@ module CStruct
         inline do |builder|
           builder.add_link_flags '-lstdc++'
           builder.add_compile_flags '-xc++'
-          include_dirs.each do |include_dir|
+          CStruct::include_dirs.each do |include_dir|
             builder.add_compile_flags "-I#{include_dir}"
           end
-          headers.each do |header|
+          CStruct::headers.each do |header|
             builder.include %{"#{header}"}
           end
           builder.c <<-EOC
@@ -52,10 +51,10 @@ module CStruct
         inline do |builder|
           builder.add_link_flags '-lstdc++'
           builder.add_compile_flags '-xc++'
-          include_dirs.each do |include_dir|
+          CStruct::include_dirs.each do |include_dir|
             builder.add_compile_flags "-I#{include_dir}"
           end
-          headers.each do |header|
+          CStruct::headers.each do |header|
             builder.include %{"#{header}"}
           end
           builder.c <<-EOC
@@ -79,10 +78,10 @@ module CStruct
         inline do |builder|
           builder.add_link_flags '-lstdc++'
           builder.add_compile_flags '-xc++'
-          include_dirs.each do |include_dir|
+          CStruct::include_dirs.each do |include_dir|
             builder.add_compile_flags "-I#{include_dir}"
           end
-          headers.each do |header|
+          CStruct::headers.each do |header|
             builder.include %{"#{header}"}
           end
           builder.prefix <<-EOC
@@ -117,10 +116,10 @@ module CStruct
         inline do |builder|
           builder.add_link_flags '-lstdc++'
           builder.add_compile_flags '-xc++'
-          include_dirs.each do |include_dir|
+          CStruct::include_dirs.each do |include_dir|
             builder.add_compile_flags "-I#{include_dir}"
           end
-          headers.each do |header|
+          CStruct::headers.each do |header|
             builder.include %{"#{header}"}
           end
           builder.include '<typeinfo>'

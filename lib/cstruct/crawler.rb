@@ -1,18 +1,17 @@
 require 'lib/cstruct/helper'
 
 module CStruct
+  class << self
+    attr_accessor :include_dirs
+    attr_accessor :headers
+  end
+
   # Crawls all struct.
   module Crawler
-
-    class << self
-      attr_accessor :include_dirs
-      attr_accessor :headers
-    end
-    
     module_function
 
     def all_possible_filenames
-      (include_dirs||[]).product(headers||[]).map do |dir,file|
+      (CStruct::include_dirs||[]).product(CStruct::headers||[]).map do |dir,file|
         File.join(dir,file)
       end
     end
@@ -47,9 +46,7 @@ end
 
 if __FILE__ == $0
   require 'yaml'
-  CStruct::Helper.include_dirs = %w[../loco]
-  CStruct::Helper.headers = %w[bbs.h]
-  CStruct::Crawler.include_dirs = %w[../loco]
-  CStruct::Crawler.headers = %w[bbs.h]
+  CStruct.include_dirs = %w[../loco]
+  CStruct.headers = %w[bbs.h]
   open('structures.yml','w') {|f| f << CStruct::Crawler.info.to_yaml}
 end

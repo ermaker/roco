@@ -3,10 +3,8 @@ require 'cstruct/crawler'
 
 describe CStruct::Crawler do
   before do
-    CStruct::Helper.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
-    CStruct::Helper.headers = %w[simple_struct.h]
-    CStruct::Crawler.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
-    CStruct::Crawler.headers = %w[simple_struct.h]
+    CStruct.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
+    CStruct.headers = %w[simple_struct.h]
   end
 
   it 'should get all struct information' do

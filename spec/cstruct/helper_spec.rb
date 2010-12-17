@@ -3,8 +3,8 @@ require 'cstruct/helper'
 
 describe CStruct::Helper do
   before do
-    CStruct::Helper.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
-    CStruct::Helper.headers = %w[simple_struct.h]
+    CStruct.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
+    CStruct.headers = %w[simple_struct.h]
   end
 
   it 'should get sizeof struct' do
