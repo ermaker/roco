@@ -11,11 +11,26 @@ module CStruct
   module Helper
     module_function
 
+    # Generate a safe function name
+    def to_function_name name
+      result = name.dup
+      result.gsub!(' ', '__space_exists__')
+      result.gsub!(',', '__comma_exists__')
+      result.gsub!('*', '__star_exists__')
+      result.gsub!('[', '__square_bracket_begins__')
+      result.gsub!(']', '__square_bracket_ends__')
+      result.gsub!('(', '__brace_begins__')
+      result.gsub!(')', '__brace_ends__')
+      result
+    end
+    private :to_function_name
+
     # Get size of struct
     def sizeof struct
+      struct_for_function_name = to_function_name struct
 
       begin
-        method(:"sizeof_#{struct}")[]
+        method(:"sizeof_#{struct_for_function_name}")[]
       rescue NameError
         inline do |builder|
           builder.add_link_flags '-lstdc++'
@@ -27,23 +42,20 @@ module CStruct
             builder.include %{"#{header}"}
           end
           builder.c <<-EOC
-            int sizeof_#{struct}()
+            int sizeof_#{struct_for_function_name}()
             {
               return sizeof(#{struct});
             }
           EOC
         end
-        module_function :"sizeof_#{struct}"
+        module_function :"sizeof_#{struct_for_function_name}"
         retry
       end
     end
 
     # Get offset of member of struct
     def offsetof struct, member
-
-      member_for_function_name = member.dup
-      member_for_function_name.gsub!('[', '__square_bracket_begins__')
-      member_for_function_name.gsub!(']', '__square_bracket_ends__')
+      member_for_function_name = to_function_name member
 
       begin
         method(:"offsetof_#{struct}_#{member_for_function_name}")[]
@@ -105,10 +117,7 @@ module CStruct
 
     # Get type of member of struct
     def typeof struct, member
-
-      member_for_function_name = member.dup
-      member_for_function_name.gsub!('[', '__square_bracket_begins__')
-      member_for_function_name.gsub!(']', '__square_bracket_ends__')
+      member_for_function_name = to_function_name member
 
       begin
         method(:"typeof_#{struct}_#{member_for_function_name}")[]
