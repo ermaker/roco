@@ -3,6 +3,7 @@ simple_struct_char_array:
   :member: 
     simple_char_array: 
       :type: 
+        :pack: c
         :size: 1
         :name: char
       :count: 0
@@ -12,11 +13,13 @@ simple_struct_int2:
   :member: 
     simple_int1: 
       :type: 
+        :pack: i
         :size: 4
         :name: int
       :offset: 0
     simple_int2: 
       :type: 
+        :pack: i
         :size: 4
         :name: int
       :offset: 4
@@ -25,6 +28,7 @@ simple_struct_int_array:
   :member: 
     simple_int_array: 
       :type: 
+        :pack: i
         :size: 4
         :name: int
       :count: 3
@@ -34,6 +38,7 @@ simple_struct_int:
   :member: 
     simple_int: 
       :type: 
+        :pack: i
         :size: 4
         :name: int
       :offset: 0
