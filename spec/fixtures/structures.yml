@@ -1,331 +1,40 @@
 --- 
-cachefile: 
-- 214
-- - 211
-  - unsigned char
-  - accessed
-- - 210
-  - unsigned char
-  - directory_zapped
-- - 0
-  - char [80]
-  - filename
-- - 207
-  - unsigned char
-  - isdirectory
-- - 200
-  - unsigned int
-  - level
-- - 80
-  - char [20]
-  - owner
-- - 208
-  - unsigned short
-  - readcnt
-- - 100
-  - char [20]
-  - second_owner
-- - 120
-  - char [80]
-  - title
-- - 212
-  - unsigned short
-  - title_color
-- - 206
-  - unsigned char
-  - tm_mday
-- - 205
-  - unsigned char
-  - tm_mon
-- - 204
-  - unsigned char
-  - tm_year
-cache: 
-- 330
-- - 84
-  - cachefile
-  - board
-- - 314
-  - int
-  - board_hash_val
-- - 0
-  - int
-  - board_id_num
-- - 326
-  - int
-  - board_type
-- - 302
-  - int
-  - child
-- - 318
-  - unsigned int
-  - dir_level
-- - 322
-  - int
-  - dir_zap
-- - 306
-  - long
-  - newread_timestamp
-- - 298
-  - int
-  - parent
-- - 4
-  - char [80]
-  - real_board_name
-board_name_and_num: 
-- 16
-- - 0
-  - char*
-  - name
-- - 8
-  - int
-  - num
-user_info: 
-- 203
-- - 143
-  - char [20]
-  - action
-- - 0
-  - int
-  - active
-- - 128
-  - char [15]
-  - chatid
-- - 24
-  - int
-  - destuid
-- - 163
-  - char [40]
-  - dummy
-- - 40
-  - int
-  - free_for_chat
-- - 48
-  - char [80]
-  - from
-- - 36
-  - int
-  - in_chat
-- - 12
-  - int
-  - invisible
-- - 28
-  - int
-  - mode
-- - 44
-  - int
-  - msg
-- - 32
-  - int
-  - pager
-- - 8
-  - int
-  - pid
-- - 16
-  - int
-  - sockactive
-- - 20
-  - int
-  - sockaddr
-- - 4
-  - int
-  - uid
-info_file: 
-- 1512
-- - 512
-  - char [1000]
-  - dummy
-- - 0
-  - char [512]
-  - link
-header: 
-- 804
-- - 4
-  - char [10][80]
-  - msgs
-- - 0
-  - int
-  - offset
-dir_fileheader: 
-- 2460
-- - 454
-  - unsigned char [2006]
-  - accessed
-- - 258
-  - unsigned char [196]
-  - dummy
-- - 0
-  - char [80]
-  - filename
-- - 252
-  - unsigned short
-  - highlight
-- - 240
-  - unsigned int
-  - level
-- - 250
-  - unsigned short
-  - marked
-- - 80
-  - char [80]
-  - owner
-- - 247
-  - unsigned char
-  - padding
-- - 254
-  - unsigned short
-  - read
-- - 248
-  - unsigned short
-  - readcnt
-- - 160
-  - char [80]
-  - title
-- - 246
-  - unsigned char
-  - tm_mday
-- - 245
-  - unsigned char
-  - tm_mon
-- - 244
-  - unsigned char
-  - tm_year
-- - 256
-  - unsigned short
-  - visit
-one_key: 
-- 16
-- - 8
-  - int (*)(int, dir_fileheader*, char*)
-  - fptr
-- - 0
-  - int
-  - key
-favorite: 
-- 2512
-- - 512
-  - char [2000]
-  - dummy
-- - 0
-  - char [512]
-  - firstboard
-commands: 
-- 40
-- - 8
-  - int (*)()
-  - cmdfunc
-- - 0
-  - char*
-  - cmdname
-- - 32
-  - char*
-  - errorcmd
-- - 16
-  - int
-  - level
-- - 24
-  - char*
-  - nextcmd
-userec: 
-- 464
-- - 304
-  - char [80]
-  - address
-- - 47
-  - unsigned char
-  - editor_kind
-- - 384
-  - char [80]
-  - email
-- - 72
-  - char [2]
-  - flags
-- - 48
-  - char [16]
-  - lasthost
-- - 252
-  - long
-  - lastlogin
-- - 14
-  - char [33]
-  - notused
-- - 64
-  - unsigned int
-  - numlogins
-- - 68
-  - unsigned int
-  - numposts
-- - 74
-  - char [14]
-  - passwd
-- - 260
-  - int
-  - protocol
-- - 264
-  - char [37]
-  - realname
-- - 301
-  - char [3]
-  - sex
-- - 168
-  - char [80]
-  - termtype
-- - 0
-  - char [14]
-  - userid
-- - 248
-  - unsigned int
-  - userlevel
-- - 88
-  - char [80]
-  - username
-fileheader: 
-- 8492
-- - 468
-  - unsigned char [8024]
-  - accessed
-- - 250
-  - unsigned char
-  - directory_zapped
-- - 120
-  - unsigned char [40]
-  - dummy1
-- - 254
-  - unsigned char [214]
-  - dummy2
-- - 0
-  - char [80]
-  - filename
-- - 247
-  - unsigned char
-  - isdirectory
-- - 240
-  - unsigned int
-  - level
-- - 80
-  - char [20]
-  - owner
-- - 251
-  - unsigned char
-  - padding
-- - 248
-  - unsigned short
-  - readcnt
-- - 100
-  - char [20]
-  - second_owner
-- - 160
-  - char [80]
-  - title
-- - 252
-  - unsigned short
-  - title_color
-- - 246
-  - unsigned char
-  - tm_mday
-- - 245
-  - unsigned char
-  - tm_mon
-- - 244
-  - unsigned char
-  - tm_year
+simple_struct_char_array: 
+  :member: 
+    simple_char_array: 
+      :type: 
+        :size: 1
+        :name: char
+      :count: 0
+      :offset: 0
+  :size: 0
+simple_struct_int2: 
+  :member: 
+    simple_int1: 
+      :type: 
+        :size: 4
+        :name: int
+      :offset: 0
+    simple_int2: 
+      :type: 
+        :size: 4
+        :name: int
+      :offset: 4
+  :size: 8
+simple_struct_int_array: 
+  :member: 
+    simple_int_array: 
+      :type: 
+        :size: 4
+        :name: int
+      :count: 3
+      :offset: 0
+  :size: 12
+simple_struct_int: 
+  :member: 
+    simple_int: 
+      :type: 
+        :size: 4
+        :name: int
+      :offset: 0
+  :size: 4
