@@ -1,11 +1,13 @@
 require 'rspec'
+require 'cstruct/crawler'
 require 'cstruct/type'
 require 'yaml'
 
 describe CStruct::Type::StructType do
   before do
-    @info = YAML::load(open(File.dirname(__FILE__) +
-                           '/../fixtures/structures.yml'))
+    CStruct.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
+    CStruct.headers = %w[simple_struct.h]
+    @info = CStruct::Crawler.crawl
   end
   it 'should have getters and setters with a int type member variable' do
     io = StringIO.new("\x01\x00\x00\x00")

@@ -7,13 +7,13 @@ module CStruct
         @offset = io.tell
       end
       def get index
-        @io.seek(@offset + @info[:type][:size] * index)
-        buf = @io.read(@info[:type][:size])
-        buf.unpack(@info[:type][:pack])[0]
+        @io.seek(@offset + @info[:type][:type][:size] * index)
+        buf = @io.read(@info[:type][:type][:size])
+        buf.unpack(@info[:type][:type][:pack])[0]
       end
       def set index, value
-        @io.seek(@offset + @info[:type][:size] * index)
-        @io.write([value].pack(@info[:type][:pack]))
+        @io.seek(@offset + @info[:type][:type][:size] * index)
+        @io.write([value].pack(@info[:type][:type][:pack]))
       end
     end
     class StructType
