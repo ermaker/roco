@@ -7,8 +7,8 @@ describe CStruct::Crawler do
     CStruct.headers = %w[simple_struct.h]
   end
 
-  it 'should get all struct information' do
-    CStruct::Crawler.info.should == {
+  it 'should crawl all struct information' do
+    CStruct::Crawler.crawl.should == {
       "simple_struct_char_array" => {
         :size => 0,
         :member => {

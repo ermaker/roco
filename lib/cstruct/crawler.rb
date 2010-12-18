@@ -1,4 +1,5 @@
 require 'lib/cstruct/helper'
+require 'yaml'
 
 module CStruct
   class << self
@@ -17,8 +18,8 @@ module CStruct
     end
     private :all_possible_filenames
 
-    # Get all struct information
-    def info
+    # Crawl all struct information
+    def crawl
       all_items = all_possible_filenames.map do |filename|
         `ctags --fields=-ft+kz -f- "#{filename}"`.split("\n").map do |line|
           items = line.split("\t")
@@ -50,12 +51,16 @@ module CStruct
       end
       result 
     end
+
+    # Save all crawled struct information
+    def save filename
+      open(filename,'w') {|f| f << crawl.to_yaml}
+    end
   end
 end
 
 if __FILE__ == $0
-  require 'yaml'
   CStruct.include_dirs = %w[../loco]
   CStruct.headers = %w[bbs.h]
-  open('structures.yml','w') {|f| f << CStruct::Crawler.info.to_yaml}
+  CStruct::Crawler.save('structures.yml')
 end
