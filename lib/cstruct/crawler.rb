@@ -41,7 +41,12 @@ module CStruct
       all_members = all_items.select {|item| item.include?('kind:m')}
 
       result = Hash[all_structs.map do |struct|
-        [struct[0],{:size => Helper.sizeof(struct[0]), :member => {}}]
+        [struct[0],{
+          :type => {:name => struct[0],
+            :size => Helper.sizeof(struct[0]),
+            :kind => 'struct'
+          },
+          :member => {}}]
       end]
 
       all_members.each do |member|
@@ -57,13 +62,19 @@ module CStruct
             member_info[:type] = {:name => type,
               :size => Helper.sizeof(type),
               :pack => "Z#{count}",
+              :kind => 'primary',
             }
           else
             member_info[:type] = {:name => type_name,
               :size => Helper.sizeof(type_name),
               :pack => TYPE_TO_PACK[type_name],
             }
-            member_info[:count] = count.to_i if count
+            if count
+              member_info[:type][:kind] = 'array'
+              member_info[:count] = count.to_i
+            else
+              member_info[:type][:kind] = 'primary'
+            end
           end
         end
       end
