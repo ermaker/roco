@@ -8,11 +8,39 @@ describe CStruct::Crawler do
   end
 
   it 'should get all struct information' do
-    CStruct::Crawler.info.sort.should == [
-      ["simple_struct_char_array", [0, [0, "char [0]", "simple_char_array"]]],
-      ["simple_struct_int", [4, [0, "int", "simple_int"]]],
-      ["simple_struct_int2", [8, [0, "int", "simple_int1"], [4, "int", "simple_int2"]]],
-      ["simple_struct_int_array", [12, [0, "int [3]", "simple_int_array"]]]
-    ].sort
+    CStruct::Crawler.info.should == {
+      "simple_struct_char_array" => {
+        :size => 0,
+        :member => {
+          "simple_char_array" => {:offset => 0,
+            :type => {:name => "char", :size => 1},
+            :count => 0},
+        }
+      },
+      "simple_struct_int" => {
+        :size => 4,
+        :member => {
+          "simple_int" => {:offset => 0,
+            :type => {:name => "int", :size => 4}},
+        }
+      },
+      "simple_struct_int2" => {
+        :size => 8,
+        :member => {
+          "simple_int1" => {:offset => 0,
+            :type => {:name => "int", :size => 4}},
+          "simple_int2" => {:offset => 4,
+            :type => {:name => "int", :size => 4}},
+        }
+      },
+      "simple_struct_int_array" => {
+        :size => 12,
+        :member => {
+          "simple_int_array" => {:offset => 0,
+            :type => {:name => "int", :size => 4},
+            :count => 3},
+        }
+      },
+    }
   end
 end

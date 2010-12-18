@@ -31,12 +31,21 @@ module CStruct
       all_members = all_items.select {|item| item.include?('kind:m')}
 
       result = Hash[all_structs.map do |struct|
-        [struct[0],[Helper.sizeof(struct[0])]]
+        [struct[0],{:size => Helper.sizeof(struct[0]), :member => {}}]
       end]
 
       all_members.each do |member|
         if member.any?{|item| item =~ /^struct:(.*)$/}
-          result[$1] << [Helper.offsetof($1,member[0]), Helper.typeof($1,member[0]), member[0]]
+          struct_name = $1
+          member_info = result[struct_name][:member][member[0]] = {}
+          member_info[:offset] = Helper.offsetof(struct_name, member[0])
+          type = Helper.typeof(struct_name, member[0])
+          raise Exception unless type =~ /^(.*?)(?: \[(\d+)\])?$/
+          type_name = $1
+          count = $2
+          member_info[:type] = {:name => type_name,
+            :size => Helper.sizeof(type_name)}
+          member_info[:count] = count.to_i if count
         end
       end
       result 
