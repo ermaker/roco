@@ -13,8 +13,7 @@ describe CStruct::Crawler do
         :size => 0,
         :member => {
           "simple_char_array" => {:offset => 0,
-            :type => {:name => "char", :size => 1, :pack => 'c'},
-            :count => 0},
+            :type => {:name => "char [0]", :size => 0, :pack => 'Z0'}},
         }
       },
       "simple_struct_int" => {

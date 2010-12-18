@@ -53,11 +53,18 @@ module CStruct
           raise Exception unless type =~ /^(.*?)(?: \[(\d+)\])?$/
           type_name = $1
           count = $2
-          member_info[:type] = {:name => type_name,
-            :size => Helper.sizeof(type_name),
-            :pack => TYPE_TO_PACK[type_name],
-          }
-          member_info[:count] = count.to_i if count
+          if type_name == 'char' and count
+            member_info[:type] = {:name => type,
+              :size => Helper.sizeof(type),
+              :pack => "Z#{count}",
+            }
+          else
+            member_info[:type] = {:name => type_name,
+              :size => Helper.sizeof(type_name),
+              :pack => TYPE_TO_PACK[type_name],
+            }
+            member_info[:count] = count.to_i if count
+          end
         end
       end
       result 
