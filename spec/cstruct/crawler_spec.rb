@@ -13,7 +13,7 @@ describe CStruct::Crawler do
         :size => 0,
         :member => {
           "simple_char_array" => {:offset => 0,
-            :type => {:name => "char", :size => 1},
+            :type => {:name => "char", :size => 1, :pack => 'c'},
             :count => 0},
         }
       },
@@ -21,23 +21,23 @@ describe CStruct::Crawler do
         :size => 4,
         :member => {
           "simple_int" => {:offset => 0,
-            :type => {:name => "int", :size => 4}},
+            :type => {:name => "int", :size => 4, :pack => 'i'}},
         }
       },
       "simple_struct_int2" => {
         :size => 8,
         :member => {
           "simple_int1" => {:offset => 0,
-            :type => {:name => "int", :size => 4}},
+            :type => {:name => "int", :size => 4, :pack => 'i'}},
           "simple_int2" => {:offset => 4,
-            :type => {:name => "int", :size => 4}},
+            :type => {:name => "int", :size => 4, :pack => 'i'}},
         }
       },
       "simple_struct_int_array" => {
         :size => 12,
         :member => {
           "simple_int_array" => {:offset => 0,
-            :type => {:name => "int", :size => 4},
+            :type => {:name => "int", :size => 4, :pack => 'i'},
             :count => 3},
         }
       },

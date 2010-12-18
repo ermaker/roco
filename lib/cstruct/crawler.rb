@@ -18,6 +18,15 @@ module CStruct
     end
     private :all_possible_filenames
 
+    TYPE_TO_PACK = {
+      'char' => 'c',
+      'unsigned char' => 'C',
+      'int' => 'i',
+      'unsigned int' => 'I',
+      'unsigned' => 'I',
+      'time_t' => 'L_',
+      'long' => 'l_',
+    }
     # Crawl all struct information
     def crawl
       all_items = all_possible_filenames.map do |filename|
@@ -45,7 +54,9 @@ module CStruct
           type_name = $1
           count = $2
           member_info[:type] = {:name => type_name,
-            :size => Helper.sizeof(type_name)}
+            :size => Helper.sizeof(type_name),
+            :pack => TYPE_TO_PACK[type_name],
+          }
           member_info[:count] = count.to_i if count
         end
       end
