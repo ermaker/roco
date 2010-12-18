@@ -36,7 +36,7 @@ describe CStruct::Crawler do
         :type => {:name => "simple_struct_int_array", :size => 12, :kind => 'struct'},
         :member => {
           "simple_int_array" => {:offset => 0,
-            :type => {:name => "int", :size => 4, :pack => 'i', :kind => 'array'},
+            :type => {:type => {:name => "int", :size => 4, :pack => 'i', :kind => 'primary'}, :kind => 'array'},
             :count => 3},
         }
       },

@@ -65,15 +65,21 @@ module CStruct
               :kind => 'primary',
             }
           else
-            member_info[:type] = {:name => type_name,
-              :size => Helper.sizeof(type_name),
-              :pack => TYPE_TO_PACK[type_name],
-            }
             if count
-              member_info[:type][:kind] = 'array'
+              member_info[:type] = {
+                :type => {:name => type_name,
+                  :size => Helper.sizeof(type_name),
+                  :pack => TYPE_TO_PACK[type_name],
+                  :kind => 'primary'},
+                :kind => 'array'
+              }
               member_info[:count] = count.to_i
             else
-              member_info[:type][:kind] = 'primary'
+              member_info[:type] = {:name => type_name,
+                :size => Helper.sizeof(type_name),
+                :pack => TYPE_TO_PACK[type_name],
+                :kind => 'primary'
+              }
             end
           end
         end
