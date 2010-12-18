@@ -18,16 +18,24 @@ module CStruct
           raise Exception
         end
       end
+      alias [] get
       def set index, value
         @io.seek(@offset + @info[:type][:type][:size] * index)
         @io.write([value].pack(@info[:type][:type][:pack]))
       end
+      alias []= set
     end
     class StructType
       def initialize info, io
         @info = info
         @io = io
         @offset = io.tell
+      end
+      alias method_missing_orig method_missing
+      def method_missing symbol, *args, &blk
+        return get(symbol.to_s) if @info[:member][symbol.to_s]
+        return set(symbol.to_s[0..-2], *args) if symbol.to_s =~ /=$/ and @info[:member][symbol.to_s[0..-2]]
+        return method_missing_orig symbol, *args, &blk
       end
       def get var_name
         var_info = @info[:member][var_name]
