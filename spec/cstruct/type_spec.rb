@@ -30,3 +30,24 @@ describe CStruct::Type::StructType do
     io.read.should == "\x02\x00\x00\x00\x04\x00\x00\x00\x06\x00\x00\x00"
   end
 end
+
+describe CStruct::Type::ArrayType do
+  before do
+    CStruct.include_dirs = [File.dirname(__FILE__) + '/../fixtures']
+    CStruct.headers = %w[simple_struct.h]
+    @info = CStruct::Crawler.crawl
+  end
+  it 'should have a struct' do
+    io = StringIO.new("\x01\x00\x00\x00\x02\x00\x00\x00\x03\x00\x00\x00")
+    array = CStruct::Type::ArrayType.new(
+      {:type => @info["simple_struct_int"]}, io)
+    array.get(0).get('simple_int').should == 1
+    array.get(1).get('simple_int').should == 2
+    array.get(2).get('simple_int').should == 3
+    array.get(0).set('simple_int', 2)
+    array.get(1).set('simple_int', 4)
+    array.get(2).set('simple_int', 6)
+    io.seek(0)
+    io.read.should == "\x02\x00\x00\x00\x04\x00\x00\x00\x06\x00\x00\x00"
+  end
+end

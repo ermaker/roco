@@ -8,8 +8,15 @@ module CStruct
       end
       def get index
         @io.seek(@offset + @info[:type][:type][:size] * index)
-        buf = @io.read(@info[:type][:type][:size])
-        buf.unpack(@info[:type][:type][:pack])[0]
+        case @info[:type][:type][:kind]
+        when 'struct'
+          return StructType.new @info[:type], @io
+        when 'primary'
+          buf = @io.read(@info[:type][:type][:size])
+          return buf.unpack(@info[:type][:type][:pack])[0]
+        else
+          raise Exception
+        end
       end
       def set index, value
         @io.seek(@offset + @info[:type][:type][:size] * index)
