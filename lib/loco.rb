@@ -21,6 +21,7 @@ class Loco
     def initialize info, io, filesize
       super(info, io)
       @filesize = filesize
+      flock File::LOCK_SH
     end
     def flock lock
       @io.flock lock

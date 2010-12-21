@@ -28,7 +28,6 @@ describe Loco::Userec do
   end
   it 'should have userec class' do
     Loco::Userec.as do |u|
-      u.flock File::LOCK_SH
       u.login('SYSOP','1234').should == true
       u.login('SYSOP','4321').should == false
       u.login('SYSOP2','1234').should == false
@@ -47,7 +46,6 @@ describe Loco::Fileheader do
   end
   it 'should have fileheader class' do
     Loco::Fileheader.as do |d|
-      d.flock File::LOCK_SH
       d.map do |dd|
         [dd.filename, dd.owner, dd.isdirectory]
       end.should == [['a', 'SYSOP', 0]]
@@ -64,7 +62,6 @@ describe Loco::Dir_fileheader do
   end
   it 'should have dir_fileheader class' do
     Loco::Dir_fileheader.as('a') do |d|
-      d.flock File::LOCK_SH
       d.map do |dd|
         [dd.filename, dd.owner, dd.title]
       end.should == [['M.1287734548.A', 'SYSOP', 'post 1']]
