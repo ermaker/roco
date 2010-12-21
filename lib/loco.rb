@@ -1,6 +1,24 @@
 require 'lib/cstruct/type'
 require 'yaml'
 
+module CStruct
+  module Type
+    class StructType
+      def _accessed usernum
+        n1 = usernum/4
+        n2 = usernum%4
+        (accessed[n1]>>(2*(3-n2)))&3
+      end
+      def read? usernum
+        (_accessed(usernum)&1) == 1
+      end
+      def visit? usernum
+        ((_accessed(usernum)>>1)&1) == 1
+      end
+    end
+  end
+end
+
 class Loco
   class << self
     attr_accessor :path

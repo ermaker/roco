@@ -66,6 +66,23 @@ describe Loco do
         ]
       end
     end
+    it 'should read a bit of read or visit' do
+      Loco::Dir_fileheader.as('a') do |d|
+        d.map do |dd|
+          Loco::Userec.as do |u|
+            u.each_with_index.map do |uu,usernum|
+              [dd.read?(usernum), dd.visit?(usernum)]
+            end
+          end
+        end.should == [
+          [[true, false], [true, false], [true, false]],
+          [[false, false], [true, false], [true, false]],
+          [[false, false], [true, false], [false, true]],
+          [[false, false], [true, false], [false, false]],
+          [[false, false], [false, false], [true, false]],
+        ]
+      end
+    end
   end
 
 end
