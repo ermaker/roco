@@ -50,6 +50,13 @@ describe Loco do
     loco.permission?('clubdir/clubdir/normal').should == false
   end
 
+  it 'should check permission when it does not exist' do
+    loco = Loco.new
+    loco.login('SYSOP','1234').should_not == nil
+    loco.permission?('notexists').should == false
+    loco.permission?('notexists/notexists').should == false
+  end
+
   describe Loco::Userec do
     it 'should read a file' do
       Loco::Userec.as do |u|

@@ -60,6 +60,7 @@ class Loco
     until path == '.'
       Fileheader.as(File.dirname(path)) do |d|
         dd = d.find {|v| v.filename == File.basename(path)}
+        return false unless dd
         Userec.as do |u|
           return false unless dd.level == 0 || dd.level & u[@usernum].userlevel != 0
         end
@@ -67,6 +68,8 @@ class Loco
       path = File.dirname(path)
     end
     return true
+  rescue Errno::ENOENT
+    return false
   end
 
   @info = YAML::load(open(File.dirname(__FILE__) + '/../structures.yml'))
