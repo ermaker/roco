@@ -1,13 +1,20 @@
 require 'rspec'
 require 'loco'
 require 'cstruct/crawler'
+require 'fileutils'
 
 describe Loco do
   before do
     CStruct.include_dirs=['../loco']
     CStruct.headers=['bbs.h']
     CStruct::Crawler.save('structures.yml')
-    Loco::path = '../loco'
+    FileUtils.rm_r('tmp') rescue nil
+    FileUtils.cp_r(File.dirname(__FILE__) + '/fixtures/loco', 'tmp')
+    Loco::path = 'tmp'
+  end
+
+  after do
+    FileUtils.rm_r('tmp') rescue nil
   end
 
   it 'should check login' do
