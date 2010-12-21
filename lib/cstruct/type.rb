@@ -18,12 +18,16 @@ module CStruct
           raise Exception
         end
       end
-      alias [] get
+      def [] *args, &blk
+        get *args, &blk
+      end
       def set index, value
         @io.seek(@offset + @info[:type][:type][:size] * index)
         @io.write([value].pack(@info[:type][:type][:pack]))
       end
-      alias []= set
+      def []= *args, &blk
+        set *args, &blk
+      end
     end
     class StructType
       def initialize info, io

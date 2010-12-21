@@ -71,7 +71,7 @@ describe Loco do
         d.map do |dd|
           Loco::Userec.as do |u|
             u.each_with_index.map do |uu,usernum|
-              [dd.read?(usernum), dd.visit?(usernum)]
+              [dd.read[usernum], dd.visit[usernum]]
             end
           end
         end.should == [
@@ -81,6 +81,29 @@ describe Loco do
           [[false, false], [true, false], [false, false]],
           [[false, false], [false, false], [true, false]],
         ]
+      end
+    end
+    it 'should set a bit of read or visit' do
+      usernum = 0
+      Loco::Dir_fileheader.as('a') do |d|
+        d[1].read[usernum].should == false
+      end
+      Loco::Dir_fileheader.as('a', 'r+') do |d|
+        d.flock(File::LOCK_EX)
+        d[1].read[usernum] = true
+      end
+      Loco::Dir_fileheader.as('a') do |d|
+        d[1].read[usernum].should == true
+      end
+      Loco::Dir_fileheader.as('a') do |d|
+        d[1].visit[usernum].should == false
+      end
+      Loco::Dir_fileheader.as('a', 'r+') do |d|
+        d.flock(File::LOCK_EX)
+        d[1].visit[usernum] = true
+      end
+      Loco::Dir_fileheader.as('a') do |d|
+        d[1].visit[usernum].should == true
       end
     end
   end

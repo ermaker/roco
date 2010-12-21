@@ -3,15 +3,42 @@ require 'yaml'
 
 module CStruct
   module Type
+    class AccessedReadType < ArrayType
+      alias super_get get
+      def get usernum
+        (super_get(usernum/4)>>(2*(3-(usernum%4))))&1 == 1
+      end
+      alias super_set set
+      def set usernum, value
+        value = value ? 1 : 0
+        byte_value = super_get(usernum/4)
+        byte_value |= value << (2*(3-(usernum%4)))
+        super_set(usernum/4, byte_value)
+      end
+    end
+    class AccessedVisitType < ArrayType
+      alias super_get get
+      def get usernum
+        (super_get(usernum/4)>>(2*(3-(usernum%4))+1))&1 == 1
+      end
+      alias super_set set
+      def set usernum, value
+        value = value ? 1 : 0
+        byte_value = super_get(usernum/4)
+        byte_value |= value << (2*(3-(usernum%4))+1)
+        super_set(usernum/4, byte_value)
+      end
+    end
     class StructType
-      def _accessed usernum
-        (accessed[usernum/4]>>(2*(3-(usernum%4))))&3
+      def read
+        var_info = @info[:member]['accessed']
+        @io.seek(@offset + var_info[:offset])
+        return AccessedReadType.new var_info, @io
       end
-      def read? usernum
-        (accessed[usernum/4]>>(2*(3-(usernum%4))))&1 == 1
-      end
-      def visit? usernum
-        (accessed[usernum/4]>>(2*(3-(usernum%4))+1))&1 == 1
+      def visit
+        var_info = @info[:member]['accessed']
+        @io.seek(@offset + var_info[:offset])
+        return AccessedVisitType.new var_info, @io
       end
     end
   end
