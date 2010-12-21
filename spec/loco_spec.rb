@@ -26,7 +26,7 @@ describe Loco do
     loco.login('user2','1234').should == 2
   end
 
-  it 'should check permission for fileheader' do
+  it 'should check permission for fileheader with SYSOP id' do
     loco = Loco.new
     loco.login('SYSOP','1234').should_not == nil
     loco.permission?('sysop').should == true
@@ -34,14 +34,18 @@ describe Loco do
     loco.permission?('a').should == true
     loco.permission?('clubdir/sysopdir/normal').should == true
     loco.permission?('clubdir/clubdir/normal').should == true
-
+  end
+  it 'should check permission for fileheader with club id' do
+    loco = Loco.new
     loco.login('club','1234').should_not == nil
     loco.permission?('sysop').should == false
     loco.permission?('club').should == true
     loco.permission?('a').should == true
     loco.permission?('clubdir/sysopdir/normal').should == false
     loco.permission?('clubdir/clubdir/normal').should == true
-
+  end
+  it 'should check permission for fileheader with normal id' do
+    loco = Loco.new
     loco.login('user2','1234').should_not == nil
     loco.permission?('sysop').should == false
     loco.permission?('club').should == false
