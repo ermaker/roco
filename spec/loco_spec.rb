@@ -43,7 +43,11 @@ describe Loco do
       Loco::Fileheader.as do |d|
         d.map do |dd|
           [dd.filename, dd.owner, dd.isdirectory]
-        end.should == [['a', 'SYSOP', 0]]
+        end.should == [
+          ["a", "SYSOP", 0],
+          ["layer11", "SYSOP", 1],
+          ["layer12", "SYSOP", 1],
+        ]
       end
     end
   end
