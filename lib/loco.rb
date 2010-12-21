@@ -62,4 +62,14 @@ class Loco
       end
     end
   end
+  class Dir_fileheader < CStruct::Type::ArrayType
+    include CStructFile
+    def self.as path='.', mode='r'
+      path = File.join(Loco.path, 'boards', path, '.DIR')
+      filesize = File.size(path)
+      File.open(path, mode) do |io|
+        yield new({:type => Loco.info['dir_fileheader']}, io, filesize)
+      end
+    end
+  end
 end

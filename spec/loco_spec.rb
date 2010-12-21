@@ -54,3 +54,20 @@ describe Loco::Fileheader do
     end
   end
 end
+
+describe Loco::Dir_fileheader do
+  before do
+    CStruct.include_dirs=['../loco']
+    CStruct.headers=['bbs.h']
+    CStruct::Crawler.save('structures.yml')
+    Loco::path = '../loco'
+  end
+  it 'should have dir_fileheader class' do
+    Loco::Dir_fileheader.as('a') do |d|
+      d.flock File::LOCK_SH
+      d.map do |dd|
+        [dd.filename, dd.owner, dd.title]
+      end.should == [['M.1287734548.A', 'SYSOP', 'post 1']]
+    end
+  end
+end
