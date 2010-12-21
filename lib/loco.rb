@@ -65,6 +65,14 @@ class Loco
     end
   end
 
+  def articles path, last_idx=0, count=25
+    return false unless permission?(path)
+    Dir_fileheader.as(path) do |a|
+      reversed = a.to_a.reverse
+      yield reversed[last_idx, count]||[]
+    end
+  end
+
   def permission_once? dirname, basename
     return if basename == '.'
     Fileheader.as(dirname) do |d|

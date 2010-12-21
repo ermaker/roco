@@ -63,9 +63,30 @@ describe Loco do
 
   it 'should traverse boards' do
     loco = Loco.new
-    loco.login('SYSOP','1234').should_not == nil
-    loco.boards.should == ["./a", "./layer11", "./layer12", "./club", "./sysop", "./clubdir"]
+    loco.login('user2','1234').should_not == nil
+
+    loco.boards.should == ["./a", "./layer11", "./layer12"]
     loco.boards('./layer11').should == ["./layer11/a", "./layer11/b", "./layer11/bb", "./layer11/dir1", "./layer11/dir2"]
+
+    usernum = loco.instance_eval('@usernum')
+
+    loco.articles('./a') do |a|
+      a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
+    end.should == [["d", "user2", false, true], ["c", "user1", false, false], ["b", "user1", true, false], ["a", "user1", false, true], ["post 1", "SYSOP", false, true]]
+
+    loco.articles('./a', 0, 2) do |a|
+      a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
+    end.should == [["d", "user2", false, true], ["c", "user1", false, false]]
+    loco.articles('./a', 2, 2) do |a|
+      a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
+    end.should == [["b", "user1", true, false], ["a", "user1", false, true]]
+    loco.articles('./a', 4, 2) do |a|
+      a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
+    end.should == [["post 1", "SYSOP", false, true]]
+    loco.articles('./a', 5, 2) do |a|
+      a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
+    end.should == []
+
   end
 
   describe Loco::Userec do
