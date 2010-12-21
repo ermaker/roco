@@ -73,6 +73,19 @@ class Loco
     end
   end
 
+  def read path, article_filename
+    return false unless permission?(path)
+    Dir_fileheader.as(path,'r+') do |a|
+      aa = a.find {|v| v.filename == article_filename}
+      aa.read[@usernum] = true
+    end
+    filename = File.join(self.class.path, 'boards', path, article_filename)
+    return open(filename) do |f|
+      f.flock(File::LOCK_SH)
+      f.read
+    end
+  end
+
   def permission_once? dirname, basename
     return if basename == '.'
     Fileheader.as(dirname) do |d|
