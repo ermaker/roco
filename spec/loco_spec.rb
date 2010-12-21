@@ -26,6 +26,25 @@ describe Loco do
     loco.login('user2','1234').should == 2
   end
 
+  it 'should check permission for fileheader' do
+    loco = Loco.new
+    loco.login('SYSOP','1234').should_not == nil
+    loco.permission?('sysop').should == true
+    loco.permission?('club').should == true
+    loco.permission?('a').should == true
+
+    loco.login('club','1234').should_not == nil
+    loco.permission?('sysop').should == false
+    loco.permission?('club').should == true
+    loco.permission?('a').should == true
+
+    loco.login('user2','1234').should_not == nil
+    loco.permission?('sysop').should == false
+    loco.permission?('club').should == false
+    loco.permission?('a').should == true
+
+  end
+
   describe Loco::Userec do
     it 'should read a file' do
       Loco::Userec.as do |u|
@@ -47,6 +66,8 @@ describe Loco do
           ["a", "SYSOP", 0],
           ["layer11", "SYSOP", 1],
           ["layer12", "SYSOP", 1],
+          ["club", "SYSOP", 0],
+          ["sysop", "SYSOP", 0],
         ]
       end
     end

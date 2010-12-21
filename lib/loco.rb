@@ -56,6 +56,15 @@ class Loco
     end
   end
 
+  def permission? path
+    Fileheader.as(File.dirname(path)) do |d|
+      dd = d.find {|v| v.filename == File.basename(path)}
+      Userec.as do |u|
+        return dd.level == 0 || dd.level & u[@usernum].userlevel != 0
+      end
+    end
+  end
+
   @info = YAML::load(open(File.dirname(__FILE__) + '/../structures.yml'))
 
   module CStructFile
