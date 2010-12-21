@@ -111,9 +111,8 @@ class Loco
 
   module CStructFile
     include Enumerable
-    def initialize info, io, filesize, mode
+    def initialize info, io, mode
       super(info, io)
-      @filesize = filesize
       if mode == 'r'
         flock File::LOCK_SH
       else
@@ -124,7 +123,7 @@ class Loco
       @io.flock lock
     end
     def length
-      @filesize/@info[:type][:type][:size]
+      File.size(@io.path)/@info[:type][:type][:size]
     end
     alias size length
     def each
@@ -138,9 +137,8 @@ class Loco
     include CStructFile
     def self.as mode='r'
       path = File.join(Loco.path, '.PASSWDS')
-      filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['userec']}, io, filesize, mode)
+        yield new({:type => Loco.info['userec']}, io, mode)
       end
     end
     def login userid, passwd
@@ -155,9 +153,8 @@ class Loco
     include CStructFile
     def self.as path='.', mode='r'
       path = File.join(Loco.path, 'boards', path, '.BOARDS')
-      filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['fileheader']}, io, filesize, mode)
+        yield new({:type => Loco.info['fileheader']}, io, mode)
       end
     end
   end
@@ -165,9 +162,8 @@ class Loco
     include CStructFile
     def self.as path='.', mode='r'
       path = File.join(Loco.path, 'boards', path, '.DIR')
-      filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['dir_fileheader']}, io, filesize, mode)
+        yield new({:type => Loco.info['dir_fileheader']}, io, mode)
       end
     end
   end
