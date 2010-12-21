@@ -61,6 +61,13 @@ describe Loco do
     loco.permission?('notexists/notexists').should == false
   end
 
+  it 'should traverse boards' do
+    loco = Loco.new
+    loco.login('SYSOP','1234').should_not == nil
+    loco.boards.should == ["./a", "./layer11", "./layer12", "./club", "./sysop", "./clubdir"]
+    loco.boards('./layer11').should == ["./layer11/a", "./layer11/b", "./layer11/bb", "./layer11/dir1", "./layer11/dir2"]
+  end
+
   describe Loco::Userec do
     it 'should read a file' do
       Loco::Userec.as do |u|

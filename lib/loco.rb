@@ -56,15 +56,29 @@ class Loco
     end
   end
 
+  def boards path='.'
+    return false unless permission?(path)
+    Fileheader.as(path) do |d|
+      d.select {|v| permission_once?(path, v.filename)}.map do |v|
+        File.join(path, v.filename)
+      end
+    end
+  end
+
+  def permission_once? dirname, basename
+    return if basename == '.'
+    Fileheader.as(dirname) do |d|
+      dd = d.find {|v| v.filename == basename}
+      return false unless dd
+      Userec.as do |u|
+        return dd.level == 0 || dd.level & u[@usernum].userlevel != 0
+      end
+    end
+  end
   def permission? path
     until path == '.'
-      Fileheader.as(File.dirname(path)) do |d|
-        dd = d.find {|v| v.filename == File.basename(path)}
-        return false unless dd
-        Userec.as do |u|
-          return false unless dd.level == 0 || dd.level & u[@usernum].userlevel != 0
-        end
-      end
+      return false unless permission_once?(
+        File.dirname(path), File.basename(path))
       path = File.dirname(path)
     end
     return true
