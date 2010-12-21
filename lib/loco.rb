@@ -52,8 +52,7 @@ class Loco
 
   def login userid, passwd
     Loco::Userec.as do |u|
-      u.flock File::LOCK_SH
-      u.login userid, passwd
+      @usernum = u.login userid, passwd
     end
   end
 
@@ -61,10 +60,14 @@ class Loco
 
   module CStructFile
     include Enumerable
-    def initialize info, io, filesize
+    def initialize info, io, filesize, mode
       super(info, io)
       @filesize = filesize
-      flock File::LOCK_SH
+      if mode == 'r'
+        flock File::LOCK_SH
+      else
+        flock File::LOCK_EX
+      end
     end
     def flock lock
       @io.flock lock
@@ -86,14 +89,15 @@ class Loco
       path = File.join(Loco.path, '.PASSWDS')
       filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['userec']}, io, filesize)
+        yield new({:type => Loco.info['userec']}, io, filesize, mode)
       end
     end
     def login userid, passwd
-      any? do |userec|
+      found = each_with_index.find do |userec,index|
         userec.userid == userid &&
           passwd.crypt(userec.passwd) == userec.passwd
       end
+      return found && found[1]
     end
   end
   class Fileheader < CStruct::Type::ArrayType
@@ -102,7 +106,7 @@ class Loco
       path = File.join(Loco.path, 'boards', path, '.BOARDS')
       filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['fileheader']}, io, filesize)
+        yield new({:type => Loco.info['fileheader']}, io, filesize, mode)
       end
     end
   end
@@ -112,7 +116,7 @@ class Loco
       path = File.join(Loco.path, 'boards', path, '.DIR')
       filesize = File.size(path)
       File.open(path, mode) do |io|
-        yield new({:type => Loco.info['dir_fileheader']}, io, filesize)
+        yield new({:type => Loco.info['dir_fileheader']}, io, filesize, mode)
       end
     end
   end

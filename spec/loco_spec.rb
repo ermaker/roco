@@ -19,21 +19,21 @@ describe Loco do
 
   it 'should check login' do
     loco = Loco.new
-    loco.login('SYSOP','1234').should == true
-    loco.login('SYSOP','4321').should == false
-    loco.login('SYSOP2','1234').should == false
-    loco.login('user1','4321').should == true
-    loco.login('user2','1234').should == true
+    loco.login('SYSOP','1234').should == 0
+    loco.login('SYSOP','4321').should == nil
+    loco.login('SYSOP2','1234').should == nil
+    loco.login('user1','4321').should == 1
+    loco.login('user2','1234').should == 2
   end
 
   describe Loco::Userec do
     it 'should read a file' do
       Loco::Userec.as do |u|
-        u.login('SYSOP','1234').should == true
-        u.login('SYSOP','4321').should == false
-        u.login('SYSOP2','1234').should == false
-        u.login('user1','4321').should == true
-        u.login('user2','1234').should == true
+        u.login('SYSOP','1234').should == 0
+        u.login('SYSOP','4321').should == nil
+        u.login('SYSOP2','1234').should == nil
+        u.login('user1','4321').should == 1
+        u.login('user2','1234').should == 2
       end
     end
   end
@@ -89,7 +89,6 @@ describe Loco do
         d[1].read[usernum].should == false
       end
       Loco::Dir_fileheader.as('a', 'r+') do |d|
-        d.flock(File::LOCK_EX)
         d[1].read[usernum] = true
       end
       Loco::Dir_fileheader.as('a') do |d|
@@ -99,7 +98,6 @@ describe Loco do
         d[1].visit[usernum].should == false
       end
       Loco::Dir_fileheader.as('a', 'r+') do |d|
-        d.flock(File::LOCK_EX)
         d[1].visit[usernum] = true
       end
       Loco::Dir_fileheader.as('a') do |d|
