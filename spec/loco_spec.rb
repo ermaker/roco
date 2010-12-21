@@ -57,7 +57,13 @@ describe Loco do
       Loco::Dir_fileheader.as('a') do |d|
         d.map do |dd|
           [dd.filename, dd.owner, dd.title]
-        end.should == [['M.1287734548.A', 'SYSOP', 'post 1']]
+        end.should == [
+          ["M.1287734548.A", "SYSOP", "post 1"],
+          ["M.1292927388.A", "user1", "a"],
+          ["M.1292927397.A", "user1", "b"],
+          ["M.1292927405.A", "user1", "c"],
+          ["M.1292927432.A", "user2", "d"],
+        ]
       end
     end
   end
