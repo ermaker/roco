@@ -21,6 +21,8 @@ module CStruct
     TYPE_TO_PACK = {
       'char' => 'c',
       'unsigned char' => 'C',
+      'short' => 's',
+      'unsigned short' => 'S',
       'int' => 'i',
       'unsigned int' => 'I',
       'unsigned' => 'I',
