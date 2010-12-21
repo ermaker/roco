@@ -27,7 +27,7 @@ describe Loco do
   end
 
   describe Loco::Userec do
-    it 'should have userec class' do
+    it 'should read a file' do
       Loco::Userec.as do |u|
         u.login('SYSOP','1234').should == true
         u.login('SYSOP','4321').should == false
@@ -39,7 +39,7 @@ describe Loco do
   end
 
   describe Loco::Fileheader do
-    it 'should have fileheader class' do
+    it 'should read a file' do
       Loco::Fileheader.as do |d|
         d.map do |dd|
           [dd.filename, dd.owner, dd.isdirectory]
@@ -53,7 +53,7 @@ describe Loco do
   end
 
   describe Loco::Dir_fileheader do
-    it 'should have dir_fileheader class' do
+    it 'should read a file' do
       Loco::Dir_fileheader.as('a') do |d|
         d.map do |dd|
           [dd.filename, dd.owner, dd.title]
