@@ -72,7 +72,7 @@ describe Loco do
           Loco::Userec.as do |u|
             u.each_with_index.map do |uu,usernum|
               [dd.read[usernum], dd.visit[usernum]]
-            end
+            end[0..2]
           end
         end.should == [
           [[true, false], [true, false], [true, false]],
