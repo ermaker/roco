@@ -86,6 +86,61 @@ class Loco
     end
   end
 
+  ARTICLE_CLASS = Struct.new(:title, :content)
+
+  def write path
+    return false unless permission?(path)
+    article = ARTICLE_CLASS.new
+    yield article
+
+    # Make a article file
+    userid, username = Userec.as {|u| [u[@usernum].userid, u[@usernum].username]}
+    time = nil
+    article_filename = nil
+    begin
+      time = Time.now
+      article_filename = "M.#{time.to_i}.A"
+      open(File.join(Loco.path, 'boards', path, article_filename),
+          File::CREAT|File::EXCL|File::WRONLY) do |f|
+        f.puts "글쓴이: #{userid} (#{username})"
+        f.puts "날  짜: #{time.strftime("%Y/%m/%d (#{%w[일 월 화 수 목 금 토][time.wday]}) %T")}"
+        f.puts "제  목 : #{article.title}"
+        f.puts
+        f.print article.content
+        # TODO
+        # append signature
+      end
+    rescue Errno::EEXIST
+      sleep 0.1
+      retry
+    end
+
+    # Append information to Dir_fileheader
+    Dir_fileheader.as(path,'r+') do |d|
+      d.append do |dd|
+        dd.filename = article_filename
+        dd.owner = userid
+        dd.title = article.title
+        dd.tm_year = time.year - 1900
+        dd.tm_mon = time.mon - 1
+        dd.tm_mday = time.day
+        dd.read[@usernum] = true
+      end
+    end
+
+    # TODO
+    # (?) Update user_timestamp
+    # Update abuse_data
+    # (?) Update .BCACHE
+    # Update cache time stamp(.BOARD_TIMESTAMP)
+
+    # Update PASSFILE
+    Userec.as('r+') do |u|
+      u[@usernum].numposts += 1
+    end
+    return true
+  end
+
   def permission_once? dirname, basename
     return if basename == '.'
     Fileheader.as(dirname) do |d|
@@ -130,6 +185,11 @@ class Loco
       (0...length).each do |i|
         yield get(i)
       end
+    end
+    def append
+      ret = get(length)
+      @io.truncate((length+1) * @info[:type][:type][:size])
+      yield ret
     end
   end
 

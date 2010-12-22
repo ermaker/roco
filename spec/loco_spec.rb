@@ -103,6 +103,40 @@ describe Loco do
     end.should == [["d", "user2", false, true], ["c", "user1", false, true], ["b", "user1", true, false], ["a", "user1", false, true], ["post 1", "SYSOP", false, true]]
   end
 
+  it 'should write a article' do
+    loco = Loco.new
+    loco.login('club','1234').should_not == nil
+    usernum = loco.instance_eval('@usernum')
+    Time.stub!(:now).and_return{Time.at(0)}
+
+    loco.articles('club') do |a|
+      a.map do |v|
+        [v.filename,v.owner,v.title,
+          v.tm_year,v.tm_mon,v.tm_mday,v.read[usernum]]
+      end
+    end.should == []
+    Loco::Userec.as {|u|u[usernum].numposts}.should == 0
+    loco.write('club') do |a|
+      a.title = 'title'
+      a.content = 'content'
+    end.should == true
+    ret = loco.articles('club') do |a|
+      a.map do |v|
+        [v.filename,v.owner,v.title,
+          v.tm_year,v.tm_mon,v.tm_mday,v.read[usernum]]
+      end
+    end
+    ret.should == [["M.0.A", "club", "title", 70, 0, 1, true]]
+    loco.read('club', ret[0][0]).should == "\261\333\276\264\300\314: club (club)\n\263\257  \302\245: 1970/01/01 (\270\361) 09:00:00\n\301\246  \270\361 : title\n\ncontent"
+    loco.articles('club') do |a|
+      a.map do |v|
+        [v.filename,v.owner,v.title,
+          v.tm_year,v.tm_mon,v.tm_mday,v.read[usernum]]
+      end
+    end.should == [["M.0.A", "club", "title", 70, 0, 1, true]]
+    Loco::Userec.as {|u|u[usernum].numposts}.should == 1
+  end
+
   describe Loco::Userec do
     it 'should read a file' do
       Loco::Userec.as do |u|
