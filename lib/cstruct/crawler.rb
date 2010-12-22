@@ -41,11 +41,12 @@ module CStruct
       end.flatten(1)
       all_structs = all_items.select {|item| item.include?('kind:s')}
       all_members = all_items.select {|item| item.include?('kind:m')}
+      all_struct_names = all_structs.map {|struct| struct[0]}
 
-      result = Hash[all_structs.map do |struct|
-        [struct[0],{
-          :type => {:name => struct[0],
-            :size => Helper.sizeof(struct[0]),
+      result = Hash[all_struct_names.map do |struct_name|
+        [struct_name,{
+          :type => {:name => struct_name,
+            :size => Helper.sizeof(struct_name),
             :kind => 'struct'
           },
           :member => {}}]
@@ -60,30 +61,32 @@ module CStruct
           raise Exception unless type =~ /^(.*?)(?: \[(\d+)\])?$/
           type_name = $1
           count = $2
+
           if type_name == 'char' and count
             member_info[:type] = {:name => type,
               :size => Helper.sizeof(type),
               :pack => "Z#{count}",
               :kind => 'primary',
             }
-          else
-            if count
-              member_info[:type] = {
-                :type => {:name => type_name,
-                  :size => Helper.sizeof(type_name),
-                  :pack => TYPE_TO_PACK[type_name],
-                  :kind => 'primary'},
-                :kind => 'array'
-              }
-              member_info[:count] = count.to_i
-            else
-              member_info[:type] = {:name => type_name,
-                :size => Helper.sizeof(type_name),
-                :pack => TYPE_TO_PACK[type_name],
-                :kind => 'primary'
-              }
-            end
+            next
           end
+
+          type_info = {:name => type_name,
+            :size => Helper.sizeof(type_name),
+            :pack => TYPE_TO_PACK[type_name],
+            :kind => all_struct_names.include?(type_name) ? 'struct' : 'primary'
+          }
+
+          unless count
+            member_info[:type] = type_info
+            next
+          end
+
+          member_info[:type] = {
+            :type => type_info,
+            :kind => 'array'
+          }
+          member_info[:count] = count.to_i
         end
       end
       result 

@@ -27,7 +27,7 @@ describe CStruct::Crawler do
         :type=>{:name=>"simple_struct_struct_int", :kind=>"struct", :size=>4},
         :member=> {
           "simple_struct_int1"=> {:offset =>0,
-            :type=> {:pack=>nil, :kind=>"primary", :size=>4, :name=>"simple_struct_int"}},
+            :type=> {:pack=>nil, :kind=>"struct", :size=>4, :name=>"simple_struct_int"}},
         }
       },
       "simple_struct_int2" => {
