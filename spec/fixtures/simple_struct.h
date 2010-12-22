@@ -3,6 +3,11 @@ struct simple_struct_int
   int simple_int;
 };
 
+struct simple_struct_struct_int
+{
+  struct simple_struct_int simple_struct_int1;
+};
+
 struct simple_struct_int2
 {
   int simple_int1;
