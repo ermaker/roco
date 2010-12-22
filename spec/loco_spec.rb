@@ -127,7 +127,7 @@ describe Loco do
       end
     end
     ret.should == [["M.0.A", "club", "title", 70, 0, 1, true]]
-    loco.read('club', ret[0][0]).should == "\261\333\276\264\300\314: club (club)\n\263\257  \302\245: 1970/01/01 (\270\361) 09:00:00\n\301\246  \270\361 : title\n\ncontent"
+    loco.read('club', ret[0][0]).should == "\261\333\276\264\300\314: club (club)\n\263\257  \302\245: 1970/01/01 (\270\361) 09:00:00\n\301\246  \270\361 : title\n\ncontent\nclub sig\n"
     loco.articles('club') do |a|
       a.map do |v|
         [v.filename,v.owner,v.title,

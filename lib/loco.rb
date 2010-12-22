@@ -106,9 +106,15 @@ class Loco
         f.puts "날  짜: #{time.strftime("%Y/%m/%d (#{%w[일 월 화 수 목 금 토][time.wday]}) %T")}"
         f.puts "제  목 : #{article.title}"
         f.puts
-        f.print article.content
-        # TODO
+        f.puts article.content
         # append signature
+        if Userec.as {|u| u[@usernum].flags[0]} & 0x8 == 0
+          # if user's signature setting is turned on
+          begin
+            f.puts File.read(File.join(Loco.path, 'signatures', userid))
+          rescue Errno::ENOENT
+          end
+        end
       end
     rescue Errno::EEXIST
       sleep 0.1
