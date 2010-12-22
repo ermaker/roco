@@ -65,32 +65,32 @@ describe Loco do
     loco = Loco.new
     loco.login('user2','1234').should_not == nil
 
-    loco.boards.should == ["./a", "./layer11", "./layer12"]
-    loco.boards('./layer11').should == ["./layer11/a", "./layer11/b", "./layer11/bb", "./layer11/dir1", "./layer11/dir2"]
+    loco.boards.should == ["a", "layer11", "layer12"]
+    loco.boards('layer11').should == ["layer11/a", "layer11/b", "layer11/bb", "layer11/dir1", "layer11/dir2"]
 
     usernum = loco.instance_eval('@usernum')
 
-    loco.articles('./a') do |a|
+    loco.articles('a') do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == [["d", "user2", false, true], ["c", "user1", false, false], ["b", "user1", true, false], ["a", "user1", false, true], ["post 1", "SYSOP", false, true]]
 
-    loco.articles('./a', 0, 2) do |a|
+    loco.articles('a', 0, 2) do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == [["d", "user2", false, true], ["c", "user1", false, false]]
-    loco.articles('./a', 2, 2) do |a|
+    loco.articles('a', 2, 2) do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == [["b", "user1", true, false], ["a", "user1", false, true]]
-    loco.articles('./a', 4, 2) do |a|
+    loco.articles('a', 4, 2) do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == [["post 1", "SYSOP", false, true]]
-    loco.articles('./a', 5, 2) do |a|
+    loco.articles('a', 5, 2) do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == []
 
-    article_filename = loco.articles('./a', 1, 1) {|a|a[0].filename}
-    loco.read('./a', article_filename).should == "\261\333\276\264\300\314: user1 (nick1)\n\263\257  \302\245: 2010/12/21 (\310\255) 19:30:09\n\301\246  \270\361: c\n\nc\n"
+    article_filename = loco.articles('a', 1, 1) {|a|a[0].filename}
+    loco.read('a', article_filename).should == "\261\333\276\264\300\314: user1 (nick1)\n\263\257  \302\245: 2010/12/21 (\310\255) 19:30:09\n\301\246  \270\361: c\n\nc\n"
 
-    loco.articles('./a') do |a|
+    loco.articles('a') do |a|
       a.map {|v| [v.title, v.owner, v.visit[usernum], v.read[usernum]]}
     end.should == [["d", "user2", false, true], ["c", "user1", false, true], ["b", "user1", true, false], ["a", "user1", false, true], ["post 1", "SYSOP", false, true]]
   end

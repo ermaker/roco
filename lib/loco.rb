@@ -60,7 +60,7 @@ class Loco
     return false unless permission?(path)
     Fileheader.as(path) do |d|
       d.select {|v| permission_once?(path, v.filename)}.map do |v|
-        File.join(path, v.filename)
+        path == '.' ? v.filename : File.join(path, v.filename)
       end
     end
   end
