@@ -29,6 +29,14 @@ describe CStruct::Type::StructType do
     io.seek(0)
     io.read.should == "\x02\x00\x00\x00\x04\x00\x00\x00\x06\x00\x00\x00"
   end
+  it 'should have a struct' do
+    io = StringIO.new("\x01\x00\x00\x00")
+    struct = CStruct::Type::StructType.new(@info["simple_struct_struct_int"], io)
+    struct.simple_struct_int1.simple_int.should == 1
+    struct.simple_struct_int1.simple_int = 2
+    io.seek(0)
+    io.read.should == "\x02\x00\x00\x00"
+  end
 end
 
 describe CStruct::Type::ArrayType do

@@ -47,15 +47,15 @@ module CStruct
         [struct_name,{
           :type => {:name => struct_name,
             :size => Helper.sizeof(struct_name),
-            :kind => 'struct'
-          },
-          :member => {}}]
+            :kind => 'struct',
+            :member => {}
+          }}]
       end]
 
       all_members.each do |member|
         if member.any?{|item| item =~ /^struct:(.*)$/}
           struct_name = $1
-          member_info = result[struct_name][:member][member[0]] = {}
+          member_info = result[struct_name][:type][:member][member[0]] = {}
           member_info[:offset] = Helper.offsetof(struct_name, member[0])
           type = Helper.typeof(struct_name, member[0])
           raise Exception unless type =~ /^(.*?)(?: \[(\d+)\])?$/
@@ -71,11 +71,15 @@ module CStruct
             next
           end
 
+          # XXX
           type_info = {:name => type_name,
             :size => Helper.sizeof(type_name),
             :pack => TYPE_TO_PACK[type_name],
             :kind => all_struct_names.include?(type_name) ? 'struct' : 'primary'
           }
+          if all_struct_names.include? type_name
+            type_info = result[type_name][:type]
+          end
 
           unless count
             member_info[:type] = type_info

@@ -37,21 +37,28 @@ module CStruct
       end
       alias method_missing_orig method_missing
       def method_missing symbol, *args, &blk
-        return get(symbol.to_s) if @info[:member][symbol.to_s]
-        return set(symbol.to_s[0..-2], *args) if symbol.to_s =~ /=$/ and @info[:member][symbol.to_s[0..-2]]
+        return get(symbol.to_s) if @info[:type][:member][symbol.to_s]
+        return set(symbol.to_s[0..-2], *args) if symbol.to_s =~ /=$/ and @info[:type][:member][symbol.to_s[0..-2]]
         return method_missing_orig symbol, *args, &blk
       end
       def get var_name
-        var_info = @info[:member][var_name]
+        var_info = @info[:type][:member][var_name]
         @io.seek(@offset + var_info[:offset])
-        if var_info[:count]
+
+        case var_info[:type][:kind]
+        when 'struct'
+          return StructType.new var_info, @io
+        when 'array'
           return ArrayType.new var_info, @io
+        when 'primary'
+          buf = @io.read(var_info[:type][:size])
+          return buf.unpack(var_info[:type][:pack])[0]
+        else
+          raise Exception
         end
-        buf = @io.read(var_info[:type][:size])
-        buf.unpack(var_info[:type][:pack])[0]
       end
       def set var_name, value
-        var_info = @info[:member][var_name]
+        var_info = @info[:type][:member][var_name]
         @io.seek(@offset + var_info[:offset])
         @io.write([value].pack(var_info[:type][:pack]))
       end

@@ -31,12 +31,12 @@ module CStruct
     end
     class StructType
       def read
-        var_info = @info[:member]['accessed']
+        var_info = @info[:type][:member]['accessed']
         @io.seek(@offset + var_info[:offset])
         return AccessedReadType.new var_info, @io
       end
       def visit
-        var_info = @info[:member]['accessed']
+        var_info = @info[:type][:member]['accessed']
         @io.seek(@offset + var_info[:offset])
         return AccessedVisitType.new var_info, @io
       end
