@@ -79,6 +79,7 @@ class Loco
     Dir_fileheader.as(path,'r+') do |a|
       aa = a.find {|v| v.filename == article_filename}
       aa.readcnt += 1
+      aa.visit[@usernum] = false
       aa.read[@usernum] = true
     end
     filename = File.join(self.class.path, 'boards', path, article_filename)
