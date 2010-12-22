@@ -75,8 +75,10 @@ class Loco
 
   def read path, article_filename
     return false unless permission?(path)
+    # TODO: Update abuse data
     Dir_fileheader.as(path,'r+') do |a|
       aa = a.find {|v| v.filename == article_filename}
+      aa.readcnt += 1
       aa.read[@usernum] = true
     end
     filename = File.join(self.class.path, 'boards', path, article_filename)
