@@ -10,9 +10,9 @@ module CStruct
       end
       alias super_set set
       def set usernum, value
-        value = value ? 1 : 0
+        value = get(usernum) != value ? 1 : 0
         byte_value = super_get(usernum/4)
-        byte_value |= value << (2*(3-(usernum%4)))
+        byte_value ^= value << (2*(3-(usernum%4)))
         super_set(usernum/4, byte_value)
       end
     end
@@ -23,9 +23,9 @@ module CStruct
       end
       alias super_set set
       def set usernum, value
-        value = value ? 1 : 0
+        value = get(usernum) != value ? 1 : 0
         byte_value = super_get(usernum/4)
-        byte_value |= value << (2*(3-(usernum%4))+1)
+        byte_value ^= value << (2*(3-(usernum%4))+1)
         super_set(usernum/4, byte_value)
       end
     end
