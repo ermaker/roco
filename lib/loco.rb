@@ -59,17 +59,40 @@ class Loco
   def boards path='.'
     return false unless permission?(path)
     Fileheader.as(path) do |d|
-      d.select {|v| permission_once?(path, v.filename)}.map do |v|
-        path == '.' ? v.filename : File.join(path, v.filename)
+      d = d.select {|v| permission_once?(path, v.filename)}
+      if block_given?
+        yield d
+      else
+        d.map do |v|
+          {
+            :filename => path == '.' ? v.filename : File.join(path, v.filename),
+            :owner => v.owner,
+            :isdirectory => v.isdirectory,
+          }
+        end
       end
     end
   end
 
-  def articles path, last_idx=0, count=25
+  def articles path, idx=0, count=25
     return false unless permission?(path)
     Dir_fileheader.as(path) do |a|
-      reversed = a.to_a.reverse
-      yield reversed[last_idx, count]||[]
+      a = a.to_a.reverse[idx, count]||[]
+      if block_given?
+        yield a
+      else
+        a.map do |v|
+          {
+            :title => v.title,
+            :owner => v.owner,
+            :read => v.read[@usernum],
+            :visit => v.visit[@usernum],
+            :hightlight => v.highlight,
+            :readcnt => v.readcnt,
+            :filename => v.filename,
+          }
+        end
+      end
     end
   end
 

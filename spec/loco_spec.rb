@@ -65,8 +65,8 @@ describe Loco do
     loco = Loco.new
     loco.login('user2','1234').should_not == nil
 
-    loco.boards.should == ["a", "layer11", "layer12"]
-    loco.boards('layer11').should == ["layer11/a", "layer11/b", "layer11/bb", "layer11/dir1", "layer11/dir2"]
+    loco.boards.should == [{:isdirectory=>0, :filename=>"a", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer11", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer12", :owner=>"SYSOP"}]
+    loco.boards('layer11').should == [{:isdirectory=>0, :filename=>"layer11/a", :owner=>"user1"}, {:isdirectory=>0, :filename=>"layer11/b", :owner=>"user2"}, {:isdirectory=>0, :filename=>"layer11/bb", :owner=>"user1"}, {:isdirectory=>1, :filename=>"layer11/dir1", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer11/dir2", :owner=>"SYSOP"}]
 
     usernum = loco.instance_eval('@usernum')
 
