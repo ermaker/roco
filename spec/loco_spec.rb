@@ -220,4 +220,13 @@ describe Loco do
     end
   end
 
+  describe Loco::Cache do
+    it'should read a file' do
+      Loco::Cache.as do |c|
+        c.map do |cc|
+          [cc.board.filename, cc.board_hash_val]
+        end
+      end.should == [["a", 5408], ["layer11/", 0], ["layer12/", 0], ["club", 27040], ["sysop", 13520], ["clubdir/", 27040], ["layer11/a", 1352], ["layer11/b", 1404], ["layer11/bb", 1404], ["layer11/dir1/", 1508], ["layer11/dir2/", 1508], ["layer11/dir1/b1", 1535], ["layer11/dir1/b2", 1535], ["layer11/dir2/a", 1534], ["layer11/dir2/b", 1535], ["clubdir/clubdir/", 28496], ["clubdir/sysopdir/", 29328], ["clubdir/clubdir/normal", 28535], ["clubdir/sysopdir/normal", 29367], ["..", 1535]]
+    end
+  end
 end

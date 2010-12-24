@@ -137,13 +137,26 @@ class Loco
       end
     end
 
-    # TODO
-    # (?) Update user_timestamp
-    # Update abuse_data
-    # (?) Update .BCACHE
-    # Update cache time stamp(.BOARD_TIMESTAMP)
+    # TODO: Update abuse_data
 
-    # Update PASSFILE
+    # Update .BOARD_TIMESTAMP
+    real_path = File.join(Loco.path, 'boards', path)
+    real_path = File.readlink(real_path) while File.symlink?(real_path)
+    hash = Loco::Cache.as do |c|
+      c.select do |cc|
+        File.identical?(real_path, File.join(Loco.path, 'boards', cc.board.filename))
+      end.map(&:board_hash_val)
+    end
+    Loco::Board_timestamp.as('r+') do |b|
+      hash.each do |h|
+        3.times do |idx|
+          h = (h / 52**idx) * 52**idx
+          b[h] = time.to_i
+        end
+      end
+    end
+
+    # Update Userec
     Userec.as('r+') do |u|
       u[@usernum].numposts += 1
     end
@@ -233,6 +246,29 @@ class Loco
       path = File.join(Loco.path, 'boards', path, '.DIR')
       File.open(path, mode) do |io|
         yield new({:type => Loco.info['dir_fileheader']}, io, mode)
+      end
+    end
+  end
+  class Cache < CStruct::Type::ArrayType
+    include CStructFile
+    def self.as mode='r'
+      path = File.join(Loco.path, '.BCACHE')
+      File.open(path, mode) do |io|
+        yield new({:type => Loco.info['cache']}, io, mode)
+      end
+    end
+  end
+  class Board_timestamp < CStruct::Type::ArrayType
+    include CStructFile
+    def self.as mode='r'
+      path = File.join(Loco.path, '.BOARD_TIMESTAMP')
+      File.open(path, mode) do |io|
+        yield new({:type => {:type => {
+          :pack => 'l_',
+          :size => 8,
+          :name => 'long',
+          :kind => 'primary',
+        }}}, io, mode)
       end
     end
   end
