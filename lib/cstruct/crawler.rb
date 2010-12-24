@@ -71,11 +71,10 @@ module CStruct
             next
           end
 
-          # XXX
           type_info = {:name => type_name,
             :size => Helper.sizeof(type_name),
             :pack => TYPE_TO_PACK[type_name],
-            :kind => all_struct_names.include?(type_name) ? 'struct' : 'primary'
+            :kind => 'primary'
           }
           if all_struct_names.include? type_name
             type_info = result[type_name][:type]
