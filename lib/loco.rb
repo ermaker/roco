@@ -56,10 +56,10 @@ class Loco
     end
   end
 
-  def boards path='.'
+  def boards path='.', idx=0, count=25
     return false unless permission?(path)
     Fileheader.as(path) do |d|
-      d = d.select {|v| permission_once?(path, v.filename)}
+      d = d.select {|v| permission_once?(path, v.filename)}[idx, count]||[]
       if block_given?
         yield d
       else
