@@ -168,7 +168,7 @@ describe Loco do
 
   describe Loco::Dir_fileheader do
     it 'should read a file' do
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d.map do |dd|
           [dd.filename, dd.owner, dd.title]
         end.should == [
@@ -181,7 +181,7 @@ describe Loco do
       end
     end
     it 'should read a bit of read or visit' do
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d.map do |dd|
           Loco::Userec.as do |u|
             u.each_with_index.map do |uu,usernum|
@@ -199,22 +199,22 @@ describe Loco do
     end
     it 'should set a bit of read or visit' do
       usernum = 0
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d[1].read[usernum].should == false
       end
-      Loco::Dir_fileheader.as('a', 'r+') do |d|
+      Loco::Dir_fileheader.as(:path => 'a', :mode => 'r+') do |d|
         d[1].read[usernum] = true
       end
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d[1].read[usernum].should == true
       end
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d[1].visit[usernum].should == false
       end
-      Loco::Dir_fileheader.as('a', 'r+') do |d|
+      Loco::Dir_fileheader.as(:path => 'a', :mode => 'r+') do |d|
         d[1].visit[usernum] = true
       end
-      Loco::Dir_fileheader.as('a') do |d|
+      Loco::Dir_fileheader.as(:path => 'a') do |d|
         d[1].visit[usernum].should == true
       end
     end

@@ -58,7 +58,7 @@ class Loco
 
   def boards path='.', idx=0, count=25
     return false unless permission?(path)
-    Fileheader.as(path) do |d|
+    Fileheader.as(:path => path) do |d|
       d = d.select {|v| permission_once?(path, v.filename)}[idx, count]||[]
       if block_given?
         yield d
@@ -76,7 +76,7 @@ class Loco
 
   def articles path, idx=0, count=25
     return false unless permission?(path)
-    Dir_fileheader.as(path) do |a|
+    Dir_fileheader.as(:path => path) do |a|
       a = a.to_a.reverse[idx, count]||[]
       if block_given?
         yield a
@@ -99,7 +99,7 @@ class Loco
   def read path, article_filename
     return false unless permission?(path)
     # TODO: Update abuse data
-    Dir_fileheader.as(path,'r+') do |a|
+    Dir_fileheader.as(:path => path, :mode => 'r+') do |a|
       aa = a.find {|v| v.filename == article_filename}
       aa.readcnt += 1
       aa.visit[@usernum] = false
@@ -148,7 +148,7 @@ class Loco
     end
 
     # Append information to Dir_fileheader
-    Dir_fileheader.as(path,'r+') do |d|
+    Dir_fileheader.as(:path => path, :mode => 'r+') do |d|
       d.append do |dd|
         dd.filename = article_filename
         dd.owner = userid
@@ -170,7 +170,7 @@ class Loco
         File.identical?(real_path, File.join(Loco.path, 'boards', cc.board.filename))
       end.map(&:board_hash_val)
     end
-    Loco::Board_timestamp.as('r+') do |b|
+    Loco::Board_timestamp.as(:mode => 'r+') do |b|
       hash.each do |h|
         3.times do |idx|
           h = (h / 52**idx) * 52**idx
@@ -180,7 +180,7 @@ class Loco
     end
 
     # Update Userec
-    Userec.as('r+') do |u|
+    Userec.as(:mode => 'r+') do |u|
       u[@usernum].numposts += 1
     end
     return true
@@ -188,7 +188,7 @@ class Loco
 
   def permission_once? dirname, basename
     return if basename == '.'
-    Fileheader.as(dirname) do |d|
+    Fileheader.as(:path => dirname) do |d|
       dd = d.find {|v| v.filename == basename}
       return false unless dd
       Userec.as do |u|
@@ -209,7 +209,7 @@ class Loco
 
   @info = YAML::load(open(File.dirname(__FILE__) + '/../structures.yml'))
 
-  module CStructFile
+  module CStructFileInclude
     include Enumerable
     def initialize info, io, mode
       super(info, io)
@@ -238,13 +238,26 @@ class Loco
     end
   end
 
-  class Userec < CStruct::Type::ArrayType
-    include CStructFile
-    def self.as mode='r'
-      path = File.join(Loco.path, '.PASSWDS')
-      File.open(path, mode) do |io|
-        yield new({:type => Loco.info['userec']}, io, mode)
+  module CStructFileExtend
+    def default_opt opt
+      {:path => '.', :mode => 'r'}.merge(opt)
+    end
+    def type
+      Loco.info[name.split('::').last.downcase]
+    end
+    def as opt={}
+      opt = default_opt opt
+      File.open(self.path(opt[:path]), opt[:mode]) do |io|
+        yield new({:type => type}, io, opt[:mode])
       end
+    end
+  end
+
+  class Userec < CStruct::Type::ArrayType
+    extend CStructFileExtend
+    include CStructFileInclude
+    def self.path path
+      return File.join(Loco.path, '.PASSWDS')
     end
     def login userid, passwd
       found = each_with_index.find do |userec,index|
@@ -255,44 +268,39 @@ class Loco
     end
   end
   class Fileheader < CStruct::Type::ArrayType
-    include CStructFile
-    def self.as path='.', mode='r'
-      path = File.join(Loco.path, 'boards', path, '.BOARDS')
-      File.open(path, mode) do |io|
-        yield new({:type => Loco.info['fileheader']}, io, mode)
-      end
+    extend CStructFileExtend
+    include CStructFileInclude
+    def self.path path
+      return File.join(Loco.path, 'boards', path, '.BOARDS')
     end
   end
   class Dir_fileheader < CStruct::Type::ArrayType
-    include CStructFile
-    def self.as path='.', mode='r'
-      path = File.join(Loco.path, 'boards', path, '.DIR')
-      File.open(path, mode) do |io|
-        yield new({:type => Loco.info['dir_fileheader']}, io, mode)
-      end
+    extend CStructFileExtend
+    include CStructFileInclude
+    def self.path path
+      return File.join(Loco.path, 'boards', path, '.DIR')
     end
   end
   class Cache < CStruct::Type::ArrayType
-    include CStructFile
-    def self.as mode='r'
-      path = File.join(Loco.path, '.BCACHE')
-      File.open(path, mode) do |io|
-        yield new({:type => Loco.info['cache']}, io, mode)
-      end
+    extend CStructFileExtend
+    include CStructFileInclude
+    def self.path path
+      return File.join(Loco.path, '.BCACHE')
     end
   end
   class Board_timestamp < CStruct::Type::ArrayType
-    include CStructFile
-    def self.as mode='r'
-      path = File.join(Loco.path, '.BOARD_TIMESTAMP')
-      File.open(path, mode) do |io|
-        yield new({:type => {:type => {
-          :pack => 'l_',
-          :size => 8,
-          :name => 'long',
-          :kind => 'primary',
-        }}}, io, mode)
-      end
+    extend CStructFileExtend
+    include CStructFileInclude
+    def self.path path
+      return File.join(Loco.path, '.BOARD_TIMESTAMP')
+    end
+    def self.type
+      {:type => {
+        :pack => 'l_',
+        :size => 8,
+        :name => 'long',
+        :kind => 'primary',
+      }}
     end
   end
 end
