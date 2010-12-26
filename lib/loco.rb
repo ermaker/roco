@@ -57,6 +57,7 @@ class Loco
   end
 
   def boards path='.', idx=0, count=25
+    path = '.' if path.empty?
     return false unless permission?(path)
     Fileheader.as(:path => path) do |d|
       d = d.select {|v| permission_once?(path, v.filename)}[idx, count]||[]
@@ -65,7 +66,7 @@ class Loco
       else
         d.map do |v|
           {
-            :filename => path == '.' ? v.filename : File.join(path, v.filename),
+            :filename => (path == '.' or path == '/') ? v.filename : File.join(path, v.filename),
             :owner => v.owner,
             :isdirectory => v.isdirectory,
           }
@@ -87,7 +88,7 @@ class Loco
             :owner => v.owner,
             :read => v.read[@usernum],
             :visit => v.visit[@usernum],
-            :hightlight => v.highlight,
+            :highlight => v.highlight,
             :readcnt => v.readcnt,
             :filename => v.filename,
           }
@@ -197,14 +198,12 @@ class Loco
     end
   end
   def permission? path
-    until path == '.'
+    until path == '.' or path == '/'
       return false unless permission_once?(
         File.dirname(path), File.basename(path))
       path = File.dirname(path)
     end
     return true
-  rescue Errno::ENOENT
-    return false
   end
 
   @info = YAML::load(open(File.dirname(__FILE__) + '/../structures.yml'))
