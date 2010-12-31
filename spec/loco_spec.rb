@@ -58,7 +58,9 @@ describe Loco do
     loco = Loco.new
     loco.login('SYSOP','1234').should_not == nil
     loco.permission?('notexists').should == false
-    loco.permission?('notexists/notexists').should == false
+    lambda do
+      loco.permission?('notexists/notexists')
+    end.should raise_error(Errno::ENOENT)
   end
 
   it 'should traverse boards' do
@@ -66,7 +68,7 @@ describe Loco do
     loco.login('user2','1234').should_not == nil
 
     loco.boards.should == [{:isdirectory=>0, :filename=>"a", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer11", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer12", :owner=>"SYSOP"}]
-    loco.boards('layer11').should == [{:isdirectory=>0, :filename=>"layer11/a", :owner=>"user1"}, {:isdirectory=>0, :filename=>"layer11/b", :owner=>"user2"}, {:isdirectory=>0, :filename=>"layer11/bb", :owner=>"user1"}, {:isdirectory=>1, :filename=>"layer11/dir1", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"layer11/dir2", :owner=>"SYSOP"}]
+    loco.boards('layer11').should == [{:isdirectory=>0, :filename=>"a", :owner=>"user1"}, {:isdirectory=>0, :filename=>"b", :owner=>"user2"}, {:isdirectory=>0, :filename=>"bb", :owner=>"user1"}, {:isdirectory=>1, :filename=>"dir1", :owner=>"SYSOP"}, {:isdirectory=>1, :filename=>"dir2", :owner=>"SYSOP"}]
 
     usernum = loco.instance_eval('@usernum')
 

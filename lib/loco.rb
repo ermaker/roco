@@ -66,7 +66,7 @@ class Loco
       else
         d.map do |v|
           {
-            :filename => (path == '.' or path == '/') ? v.filename : File.join(path, v.filename),
+            :filename => v.filename,
             :owner => v.owner,
             :isdirectory => v.isdirectory,
           }
