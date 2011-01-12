@@ -102,7 +102,7 @@ class Loco
     # TODO: Update abuse data
     Dir_fileheader.as(:path => path, :mode => 'r+') do |a|
       aa = a.find {|v| v.filename == article_filename}
-      aa.readcnt += 1
+      aa.readcnt += 1 if aa.read[@usernum] == false
       aa.visit[@usernum] = false
       aa.read[@usernum] = true
     end
